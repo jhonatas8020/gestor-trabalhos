@@ -1,5 +1,6 @@
 package com.git.gestoracademico.controllers;
 
+import com.git.gestoracademico.dtos.AlunoDto;
 import com.git.gestoracademico.models.Aluno;
 import com.git.gestoracademico.services.AlunoService;
 import lombok.AllArgsConstructor;
@@ -24,23 +25,23 @@ public class AlunoController {
     private final AlunoService alunoService;
 
     @GetMapping
-    public ResponseEntity<List<Aluno>> getAll() {
+    public ResponseEntity<List<AlunoDto>> getAll() {
         return ResponseEntity.ok(alunoService.listarTodos());
     }
 
     @GetMapping("/{registro}")
-    public ResponseEntity<Aluno> procurarPorRegistro(@PathVariable Long registro) {
+    public ResponseEntity<AlunoDto> procurarPorRegistro(@PathVariable Long registro) {
         return new ResponseEntity<>(alunoService.buscarPorRegistro(registro), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Aluno> save(@RequestBody Aluno aluno) {
+    public ResponseEntity<AlunoDto> save(@RequestBody AlunoDto aluno) {
         return new ResponseEntity<>(alunoService.salvar(aluno), HttpStatus.CREATED);
     }
 
     @PutMapping("/{registro}")
-    public ResponseEntity<Aluno> atualizar(@PathVariable Long registro,
-                                                @RequestBody Aluno aluno) {
+    public ResponseEntity<AlunoDto> atualizar(@PathVariable Long registro,
+                                                @RequestBody AlunoDto aluno) {
 
         return new ResponseEntity<>(alunoService.atualizar(registro, aluno), HttpStatus.OK);
     }
