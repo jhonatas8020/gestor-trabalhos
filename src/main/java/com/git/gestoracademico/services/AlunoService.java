@@ -4,14 +4,12 @@ import com.git.gestoracademico.dtos.AlunoDto;
 import com.git.gestoracademico.exceptions.GestorExceptionNotFound;
 import com.git.gestoracademico.mappers.AlunoMapper;
 import com.git.gestoracademico.models.Aluno;
-import com.git.gestoracademico.models.Orientador;
 import com.git.gestoracademico.repositorys.AlunoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor

@@ -10,22 +10,27 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.List;
 
 @Entity
-@Table(name = "tb_aluno")
+@Table(name = "tb_tcc")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class Aluno {
+public class Tcc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long registroAluno;
-    private String nome;
-    private String turma;
-    private String curso;
-    private String telefone;
+    private Long id;
+    private String titulo;
+
+    @OneToMany
+    private List<Aluno> integrantes;
+
+    @ManyToOne
+    private Orientador orientador;
 
 }
