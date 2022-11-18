@@ -29,9 +29,9 @@ public class AlunoService {
     }
 
     public AlunoDto buscarPorRegistro(Long registro) {
-        Optional<Aluno> aluno = alunoRepository.findById(registro);
-        Optional<AlunoDto> alunoDto = Optional.ofNullable(alunoMapper.toDto(aluno.get()));
-        return alunoDto.orElseThrow(() -> new GestorExceptionNotFound("Aluno não encontrado"));
+        Aluno aluno = alunoRepository.findById(registro)
+                .orElseThrow(() -> new GestorExceptionNotFound("Aluno não encontrado"));
+        return alunoMapper.toDto(aluno);
     }
 
     public AlunoDto salvar(AlunoDto alunoDto) {
@@ -39,14 +39,26 @@ public class AlunoService {
         return alunoMapper.toDto(aluno);
     }
 
-    public AlunoDto atualizar(Long registro, AlunoDto alunoAtualizado) {
+    public AlunoDto atualizar(Long registro, AlunoDto alunoDto) {
         Aluno aluno = alunoRepository.findById(registro)
                 .orElseThrow(() -> new GestorExceptionNotFound("Aluno não encontrado") );
 
-        aluno.setNome(alunoAtualizado.getNome());
-        aluno.setTurma(alunoAtualizado.getTurma());
-        aluno.setCurso(alunoAtualizado.getCurso());
-        aluno.setTelefone(alunoAtualizado.getTelefone());
+        if(alunoDto.getNome() != null) {
+            aluno.setNome(alunoDto.getNome());
+        }
+
+        if(alunoDto.getTurma() != null) {
+            aluno.setTurma(alunoDto.getTurma());
+        }
+
+        if(alunoDto.getCurso() != null) {
+            aluno.setCurso(alunoDto.getCurso());
+        }
+
+        if(alunoDto.getTelefone() != null) {
+            aluno.setTelefone(alunoDto.getTelefone());
+        }
+
         alunoRepository.save(aluno);
 
         return alunoMapper.toDto(aluno);

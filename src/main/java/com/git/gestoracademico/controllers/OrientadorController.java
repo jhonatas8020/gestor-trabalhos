@@ -1,5 +1,6 @@
 package com.git.gestoracademico.controllers;
 
+import com.git.gestoracademico.dtos.OrientadorDto;
 import com.git.gestoracademico.models.Orientador;
 import com.git.gestoracademico.services.OrientadorService;
 import lombok.AllArgsConstructor;
@@ -17,23 +18,23 @@ public class OrientadorController {
     private final OrientadorService orientadorService;
 
     @GetMapping
-    public ResponseEntity<List<Orientador>> getAll() {
+    public ResponseEntity<List<OrientadorDto>> getAll() {
         return ResponseEntity.ok(orientadorService.listarTodos());
     }
 
     @GetMapping("/{matricula}")
-    public ResponseEntity<Orientador> procurarPorMatricula(@PathVariable Long matricula) {
+    public ResponseEntity<OrientadorDto> procurarPorMatricula(@PathVariable Long matricula) {
         return new ResponseEntity<>(orientadorService.buscarPorMatricula(matricula), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<Orientador> save(@RequestBody Orientador orientador) {
+    public ResponseEntity<OrientadorDto> save(@RequestBody OrientadorDto orientador) {
         return new ResponseEntity<>(orientadorService.salvar(orientador), HttpStatus.CREATED);
     }
 
     @PutMapping("/{matricula}")
-    public ResponseEntity<Orientador> atualizar(@PathVariable Long matricula,
-                                                @RequestBody Orientador orientador) {
+    public ResponseEntity<OrientadorDto> atualizar(@PathVariable Long matricula,
+                                                @RequestBody OrientadorDto orientador) {
 
         return new ResponseEntity<>(orientadorService.atualizar(matricula, orientador), HttpStatus.OK);
     }

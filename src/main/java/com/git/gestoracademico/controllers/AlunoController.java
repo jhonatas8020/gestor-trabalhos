@@ -1,7 +1,6 @@
 package com.git.gestoracademico.controllers;
 
 import com.git.gestoracademico.dtos.AlunoDto;
-import com.git.gestoracademico.models.Aluno;
 import com.git.gestoracademico.services.AlunoService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

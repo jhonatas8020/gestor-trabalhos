@@ -1,11 +1,16 @@
 package com.git.gestoracademico.services;
 
+import com.git.gestoracademico.dtos.OrientadorDto;
 import com.git.gestoracademico.exceptions.GestorExceptionNotFound;
+import com.git.gestoracademico.mappers.OrientadorMapper;
 import com.git.gestoracademico.models.Orientador;
+import com.git.gestoracademico.models.enums.Disponibilidades;
+import com.git.gestoracademico.models.enums.Titulacao;
 import com.git.gestoracademico.repositorys.OrientadorRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,33 +20,65 @@ public class OrientadorService {
 
     private final OrientadorRepository orientadorRepository;
 
-    public List<Orientador> listarTodos() {
-        return orientadorRepository.findAll();
+    private final OrientadorMapper orientadorMapper;
+
+    public List<OrientadorDto> listarTodos() {
+        List<Orientador> orientadores = orientadorRepository.findAll();
+        List<OrientadorDto> orientadoresDtos = new ArrayList<>();
+        orientadores.forEach(orientador -> orientadoresDtos.add(orientadorMapper.toDto(orientador)));
+        return orientadoresDtos;
     }
 
-    public Orientador buscarPorMatricula(Long matricula) {
-        Optional<Orientador> orientador = orientadorRepository.findById(matricula);
-        return orientador.orElseThrow(() -> new GestorExceptionNotFound("Orientador não encontrado"));
+    public OrientadorDto buscarPorMatricula(Long matricula) {
+        Orientador orientador = orientadorRepository.findById(matricula)
+                .orElseThrow(() -> new GestorExceptionNotFound("Orientador não encontrado"));
+        return orientadorMapper.toDto(orientador);
     }
 
-    public Orientador salvar(Orientador orientador) {
-        return orientadorRepository.save(orientador);
+    public OrientadorDto salvar(OrientadorDto orientadorDto) {
+        Orientador orientador = orientadorRepository.save(orientadorMapper.toDomain(orientadorDto));
+        return orientadorMapper.toDto(orientador);
     }
 
-    public Orientador atualizar(Long matricula, Orientador orientadorAtualizado) {
+    public OrientadorDto atualizar(Long matricula, OrientadorDto orientadorDto) {
         Orientador orientador = orientadorRepository.findById(matricula)
                 .orElseThrow(() -> new GestorExceptionNotFound("Orientador não encontrado") );
 
-        orientador.setNome(orientadorAtualizado.getNome());
-        orientador.setTitulacao(orientadorAtualizado.getTitulacao());
-        orientador.setTelefone(orientadorAtualizado.getTelefone());
+        if(orientadorDto.getNome() != null) {
+            orientador.setNome(orientadorDto.getNome());
+        }
 
-        return orientadorRepository.save(orientador);
+        if(orientadorDto.getTelefone() != null) {
+            orientador.setTelefone(orientadorDto.getTelefone());
+        }
+
+        if(orientadorDto.getAreaConhecimento() != null) {
+            orientador.setAreaConhecimento(orientadorDto.getAreaConhecimento());
+        }
+
+        if(orientadorDto.getTitulacao() != null) {
+            orientador.setTitulacao(Enum.valueOf(Titulacao.class, orientadorDto.getTitulacao()));
+        }
+
+        if(orientadorDto.getDisponibilidades() != null) {
+            orientador.setDisponibilidades(getListDisponibilidades(orientadorDto.getDisponibilidades()));
+        }
+
+        orientadorRepository.save(orientador);
+
+        return orientadorMapper.toDto(orientador);
     }
 
     public void deletar(Long matricula) {
         Orientador orientador = orientadorRepository.findById(matricula)
                 .orElseThrow(() -> new GestorExceptionNotFound("Orientador não encontrado"));
         orientadorRepository.deleteById(orientador.getMatricula());
+    }
+
+    private List<Disponibilidades> getListDisponibilidades(List<String> disponibilidades) {
+        List<Disponibilidades> list = new ArrayList<>();
+        disponibilidades.forEach(disponibilidade ->
+                list.add(Enum.valueOf(Disponibilidades.class, disponibilidade)));
+        return list;
     }
 }
